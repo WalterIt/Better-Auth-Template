@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button"
 import { LoadingSwap } from "@/components/ui/loading-swap"
 import { authClient } from "@/auth-client"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
 // import { NumberInput } from "@/components/ui/number-input"
 
 const signUpSchema = z.object({
@@ -29,14 +28,11 @@ const signUpSchema = z.object({
 
 type SignUpForm = z.infer<typeof signUpSchema>
 
-export function SignUpTab(
-//     {
-//   openEmailVerificationTab,
-// }: {
-//   openEmailVerificationTab: (email: string) => void
-// }
-) {
-  const router = useRouter()
+export function SignUpTab({
+  openEmailVerificationTab,
+}: {
+  openEmailVerificationTab: (email: string) => void
+}) {
   const form = useForm<SignUpForm>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -49,23 +45,21 @@ export function SignUpTab(
   const { isSubmitting } = form.formState
 
   async function handleSignUp(data: SignUpForm) {
-    // const res = await authClient.signUp.email(
-    await authClient.signUp.email(
+    const res = await authClient.signUp.email(
       { ...data, callbackURL: "/" },
       {
-        onError: error => {
+        onError: (error) => {
           toast.error(error.error.message || "Failed to Sign Up!")
         },
-        onSuccess: ()  => {
-          router.push("/")
+        onSuccess: () => {
         },
-      },
+      }
     )
 
-    // if (res.error == null && !res.data.user.emailVerified) {
-    //   toast.success("Check your email to verify your account")
-    // //   openEmailVerificationTab(data.email)
-    // }
+    if (res.error == null && !res.data.user.emailVerified) {
+      toast.success("Check your email to verify your account")
+      openEmailVerificationTab(data.email)
+    }
   }
 
   return (
@@ -122,7 +116,7 @@ export function SignUpTab(
               <FormControl>
                 Number Input
                 {/* <NumberInput {...field} /> */}
-              {/* </FormControl>
+        {/* </FormControl>
               <FormMessage />
             </FormItem> 
           )}

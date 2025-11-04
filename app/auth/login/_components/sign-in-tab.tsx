@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { PasswordInput } from "@/components/ui/password-input"
 import { Button } from "@/components/ui/button"
-// import { LoadingSwap } from "@/components/ui/loading-swap"
+import { LoadingSwap } from "@/components/ui/loading-swap"
 import { authClient } from "@/auth-client"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
@@ -28,13 +28,13 @@ const signInSchema = z.object({
 type SignInForm = z.infer<typeof signInSchema>
 
 export function SignInTab(
-//     {
-//   openEmailVerificationTab,
-//   openForgotPassword,
-// }: {
-//   openEmailVerificationTab: (email: string) => void
-//   openForgotPassword: () => void
-// }
+  {
+  openEmailVerificationTab,
+  openForgotPassword,
+}: {
+  openEmailVerificationTab: (email: string) => void
+  openForgotPassword: () => void
+}
 ) {
   const router = useRouter()
   const form = useForm<SignInForm>({
@@ -52,10 +52,11 @@ export function SignInTab(
       { ...data, callbackURL: "/" },
       {
         onError: error => {
-        //   if (error.error.code === "EMAIL_NOT_VERIFIED") {
-        //     openEmailVerificationTab(data.email)
-        //   }
-          toast.error(error.error.message || "Failed to sign in")
+          if (error.error.code === "EMAIL_NOT_VERIFIED") {
+            openEmailVerificationTab(data.email)
+          }
+          // TODO: Show an error in a FormMessage component
+          toast.error(error.error.message || "Failed to sign in!")
         },
         onSuccess: () => {
           router.push("/")
@@ -115,8 +116,7 @@ export function SignInTab(
           />
 
           <Button type="submit" disabled={isSubmitting} className="w-full">
-            Sign In
-            {/* <LoadingSwap isLoading={isSubmitting}>Sign In</LoadingSwap> */}
+            <LoadingSwap isLoading={isSubmitting}>Sign In</LoadingSwap>
           </Button>
         </form>
       </Form>

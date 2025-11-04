@@ -2,8 +2,8 @@ import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { db } from "@/drizzle/db"
 import { nextCookies } from "better-auth/next-js"
-// import { sendPasswordResetEmail } from "../emails/password-reset-email"
-// import { sendEmailVerificationEmail } from "../emails/email-verification"
+import { sendPasswordResetEmail } from "@/actions/send-email.action"
+import { sendEmailVerificationEmail } from "@/actions/send-email.action"
 // import { createAuthMiddleware } from "better-auth/api"
 // import { sendWelcomeEmail } from "../emails/welcome-email"
 // import { sendDeleteAccountVerificationEmail } from "../emails/delete-account-verification"
@@ -50,17 +50,18 @@ export const auth = betterAuth({
   // },
   emailAndPassword: {
     enabled: true,
-    // requireEmailVerification: true,
-    // sendResetPassword: async ({ user, url }) => {
-    //   await sendPasswordResetEmail({ user, url })
-    // },
+    requireEmailVerification: true,
+    sendResetPassword: async ({ user, url }) => {
+      await sendPasswordResetEmail({ user, url })
+    },
   },
   emailVerification: {
     autoSignInAfterVerification: true,
+    expiresIn: 60 * 60, // 1 hour
     sendOnSignUp: true,
-    // sendVerificationEmail: async ({ user, url }) => {
-    //   await sendEmailVerificationEmail({ user, url })
-    // },
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendEmailVerificationEmail({ user, url })
+    },
   },
   socialProviders: {
     github: {
@@ -72,6 +73,7 @@ export const auth = betterAuth({
         }
       },
     },
+    // TODO: Replace Discord with Google provider. Check `lib/o-auth-providers.ts`
     discord: {
       clientId: process.env.DISCORD_CLIENT_ID!,
       clientSecret: process.env.DISCORD_CLIENT_SECRET!,

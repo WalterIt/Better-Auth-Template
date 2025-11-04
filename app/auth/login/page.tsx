@@ -11,12 +11,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SignUpTab } from "./_components/sign-up-tab"
 import { SignInTab } from "./_components/sign-in-tab"
 import { Separator } from "@/components/ui/separator"
-// import { SocialAuthButtons } from "./_components/social-auth-buttons"
+import { SocialAuthButtons } from "./_components/social-auth-buttons"
 import { useEffect, useState } from "react"
 import { authClient } from "@/auth-client"
 import { useRouter } from "next/navigation"
-// import { EmailVerification } from "./_components/email-verification"
-// import { ForgotPassword } from "./_components/forgot-password"
+import { EmailVerification } from "./_components/email-verification"
+import { ForgotPassword } from "./_components/forgot-password"
 
 type Tab = "signin" | "signup" | "email-verification" | "forgot-password"
 
@@ -31,10 +31,10 @@ export default function LoginPage() {
     })
   }, [router])
 
-//   function openEmailVerificationTab(email: string) {
-//     setEmail(email)
-//     setSelectedTab("email-verification")
-//   }
+  function openEmailVerificationTab(email: string) {
+    setEmail(email)
+    setSelectedTab("email-verification")
+  }
 
   return (
     <Tabs
@@ -55,18 +55,15 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <SignInTab
-            />
-            {/* <SignInTab
               openEmailVerificationTab={openEmailVerificationTab}
               openForgotPassword={() => setSelectedTab("forgot-password")}
-            /> */}
+            />
           </CardContent>
 
           <Separator />
 
           <CardFooter className="grid grid-cols-2 gap-3">
-             Social Auth Buttons
-            {/* <SocialAuthButtons /> */}
+            <SocialAuthButtons />
           </CardFooter>
         </Card>
       </TabsContent>
@@ -77,15 +74,13 @@ export default function LoginPage() {
             <CardTitle>Sign Up</CardTitle>
           </CardHeader>
           <CardContent>
-            <SignUpTab  />
-            {/* <SignUpTab openEmailVerificationTab={openEmailVerificationTab} /> */}
+            <SignUpTab openEmailVerificationTab={openEmailVerificationTab} />
           </CardContent>
 
           <Separator />
 
           <CardFooter className="grid grid-cols-2 gap-3">
-            Social Auth Buttons
-            {/* <SocialAuthButtons /> */}
+            <SocialAuthButtons />
           </CardFooter>
         </Card>
       </TabsContent>
@@ -96,8 +91,7 @@ export default function LoginPage() {
             <CardTitle>Verify Your Email</CardTitle>
           </CardHeader>
           <CardContent>
-             Email Verification Comp
-            {/* <EmailVerification email={email} /> */}
+            <EmailVerification email={email} />
           </CardContent>
         </Card>
       </TabsContent>
@@ -108,8 +102,7 @@ export default function LoginPage() {
             <CardTitle>Forgot Password</CardTitle>
           </CardHeader>
           <CardContent>
-            ForgotPassword comp
-            {/* <ForgotPassword openSignInTab={() => setSelectedTab("signin")} /> */}
+            <ForgotPassword openSignInTab={() => setSelectedTab("signin")} />
           </CardContent>
         </Card>
       </TabsContent>
