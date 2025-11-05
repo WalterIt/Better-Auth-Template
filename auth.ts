@@ -4,8 +4,8 @@ import { db } from "@/drizzle/db"
 import { nextCookies } from "better-auth/next-js"
 import { sendPasswordResetEmail } from "@/actions/send-email.action"
 import { sendEmailVerificationEmail } from "@/actions/send-email.action"
-// import { createAuthMiddleware } from "better-auth/api"
-// import { sendWelcomeEmail } from "../emails/welcome-email"
+import { createAuthMiddleware } from "better-auth/api"
+import { sendWelcomeEmail } from "@/actions/send-email.action"
 // import { sendDeleteAccountVerificationEmail } from "../emails/delete-account-verification"
 // import { twoFactor } from "better-auth/plugins/two-factor"
 // import { passkey } from "better-auth/plugins/passkey"
@@ -25,29 +25,29 @@ import { sendEmailVerificationEmail } from "@/actions/send-email.action"
 
 export const auth = betterAuth({
   appName: "Better Auth Template",
-  // user: {
-  //   changeEmail: {
-  //     enabled: true,
-  //     sendChangeEmailVerification: async ({ user, url, newEmail }) => {
-  //       await sendEmailVerificationEmail({
-  //         user: { ...user, email: newEmail },
-  //         url,
-  //       })
-  //     },
-  //   },
+  user: {
+    changeEmail: {
+      enabled: true,
+      sendChangeEmailVerification: async ({ user, url, newEmail }) => {
+        await sendEmailVerificationEmail({
+          user: { ...user, email: newEmail },
+          url,
+        })
+      },
+    },
   //   deleteUser: {
   //     enabled: true,
   //     sendDeleteAccountVerification: async ({ user, url }) => {
   //       await sendDeleteAccountVerificationEmail({ user, url })
   //     },
   //   },
-  //   additionalFields: {
-  //     favoriteNumber: {
-  //       type: "number",
-  //       required: true,
-  //     },
-  //   },
-  // },
+    additionalFields: {
+      favoriteNumber: {
+        type: "number",
+        required: true,
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -148,18 +148,18 @@ export const auth = betterAuth({
     provider: "pg",
   }),
   hooks: {
-    // after: createAuthMiddleware(async ctx => {
-    //   if (ctx.path.startsWith("/sign-up")) {
-    //     const user = ctx.context.newSession?.user ?? {
-    //       name: ctx.body.name,
-    //       email: ctx.body.email,
-    //     }
+    after: createAuthMiddleware(async ctx => {
+      if (ctx.path.startsWith("/sign-up")) {
+        const user = ctx.context.newSession?.user ?? {
+          name: ctx.body.name,
+          email: ctx.body.email,
+        }
 
-    //     if (user != null) {
-    //       await sendWelcomeEmail(user)
-    //     }
-    //   }
-    // }),
+        if (user != null) {
+          await sendWelcomeEmail(user)
+        }
+      }
+    }),
   },
   databaseHooks: {
     // session: {

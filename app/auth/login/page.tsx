@@ -37,10 +37,11 @@ export default function LoginPage() {
   }
 
   return (
+    <div className="my-6 px-4">
     <Tabs
       value={selectedTab}
       onValueChange={t => setSelectedTab(t as Tab)}
-      className="max-auto w-full my-6 px-4"
+      className="w-full max-w-md mx-auto"
     >
       {(selectedTab === "signin" || selectedTab === "signup") && (
         <TabsList>
@@ -107,5 +108,6 @@ export default function LoginPage() {
         </Card>
       </TabsContent>
     </Tabs>
+    </div>
   )
 }

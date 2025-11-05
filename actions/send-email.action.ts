@@ -76,3 +76,32 @@ export async function sendEmailVerificationEmail({
     return { success: false };
   }
 }
+
+
+export async function sendWelcomeEmail(user: { name: string; email: string }) {
+  const mailOptions = {
+    from: process.env.NODEMAILER_USER,
+    to: user.email,
+    subject: `CommonLingo - Verify your email address`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #333;">Welcome to Better Auth App!</h2>
+        <p>Hello ${user.name},</p>
+        <p>Thank you for signing up for our app! We're excited to have you on board.</p>
+        <p>Best regards,
+        <br>
+        Your App Team</p>
+      </div>
+    `,
+    text: `Hello ${user.name},\n\nThank you for signing up for our app! We're excited to have you on board.\n\nBest regards,\nYour App Team`,
+
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    return { success: true };
+  } catch (err) {
+    console.error("[SendEmail]:", err);
+    return { success: false };
+  }
+}

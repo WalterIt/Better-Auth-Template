@@ -95,11 +95,11 @@ export function SignInTab(
                 <div className="flex justify-between items-center">
                   <FormLabel>Password</FormLabel>
                   <Button
-                    onClick={() => {}}
+                    onClick={openForgotPassword}
                     type="button"
                     variant="link"
                     size="sm"
-                    className="text-sm font-normal underline"
+                    className="text-sm font-normal underline cursor-pointer"
                   >
                     Forgot password?
                   </Button>
