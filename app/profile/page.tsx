@@ -23,11 +23,11 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { ProfileUpdateForm } from "./_components/profile-update-form"
 import { ReactNode, Suspense } from "react"
-// import { SetPasswordButton } from "./_components/set-password-button"
-// import { ChangePasswordForm } from "./_components/change-password-form"
-// import { SessionManagement } from "./_components/session-management"
-// import { AccountLinking } from "./_components/account-linking"
-// import { AccountDeletion } from "./_components/account-deletion"
+import { SetPasswordButton } from "./_components/set-password-button"
+import { ChangePasswordForm } from "./_components/change-password-form"
+import { SessionManagement } from "./_components/session-management"
+import { AccountLinking } from "./_components/account-linking"
+import { AccountDeletion } from "./_components/account-deletion"
 // import { TwoFactorAuth } from "./_components/two-factor-auth"
 // import { PasskeyManagement } from "./_components/passkey-management"
 
@@ -103,11 +103,10 @@ export default async function ProfilePage() {
 
         <TabsContent value="security">
           <LoadingSuspense>
-            Security Tab
-            {/* <SecurityTab
+            <SecurityTab
               email={session.user.email}
-              isTwoFactorEnabled={session.user.twoFactorEnabled ?? false}
-            /> */}
+            //   isTwoFactorEnabled={session.user.twoFactorEnabled ?? false}
+            />
           </LoadingSuspense>
         </TabsContent>
 
@@ -129,8 +128,7 @@ export default async function ProfilePage() {
               <CardTitle className="text-destructive">Danger Zone</CardTitle>
             </CardHeader>
             <CardContent>
-                Account Deletion
-              {/* <AccountDeletion /> */}
+              <AccountDeletion />
             </CardContent>
           </Card>
         </TabsContent>
@@ -148,8 +146,7 @@ async function LinkedAccountsTab() {
   return (
     <Card>
       <CardContent>
-        Account Linking
-        {/* <AccountLinking currentAccounts={nonCredentialAccounts} /> */}
+        <AccountLinking currentAccounts={nonCredentialAccounts} />
       </CardContent>
     </Card>
   )
@@ -164,11 +161,10 @@ async function SessionsTab({
   return (
     <Card>
       <CardContent>
-        Session Management
-        {/* <SessionManagement
+        <SessionManagement
           sessions={sessions}
           currentSessionToken={currentSessionToken}
-        /> */}
+        />
       </CardContent>
     </Card>
   )
@@ -176,21 +172,22 @@ async function SessionsTab({
 
 async function SecurityTab({
   email,
-  isTwoFactorEnabled,
+//   isTwoFactorEnabled,
 }: {
   email: string
-  isTwoFactorEnabled: boolean
+//   isTwoFactorEnabled: boolean
 }) {
+    const accounts = await auth.api.listUserAccounts({ headers: await headers() })
 //   const [passkeys, accounts] = await Promise.all([
-//     auth.api.listPasskeys({ headers: await headers() }),
+//     // auth.api.listPasskeys({ headers: await headers() }),
 //     auth.api.listUserAccounts({ headers: await headers() }),
 //   ])
 
-//   const hasPasswordAccount = accounts.some(a => a.providerId === "credential")
+  const hasPasswordAccount = accounts.some(a => a.providerId === "credential")
 
   return (
     <div className="space-y-6">
-      {/* {hasPasswordAccount ? ( */}
+      {hasPasswordAccount ? (
         <Card>
           <CardHeader>
             <CardTitle>Change Password</CardTitle>
@@ -199,11 +196,10 @@ async function SecurityTab({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            Change Password Form
-            {/* <ChangePasswordForm /> */}
+            <ChangePasswordForm />
           </CardContent>
         </Card>
-      {/* ) : ( */}
+        ) : (  
         <Card>
           <CardHeader>
             <CardTitle>Set Password</CardTitle>
@@ -212,25 +208,24 @@ async function SecurityTab({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            Set Password Button
-            {/* <SetPasswordButton email={email} /> */}
+            <SetPasswordButton email={email} />
           </CardContent>
         </Card>
-      {/* )} */}
-      {/* {hasPasswordAccount && ( */}
+        )}  
+      {hasPasswordAccount && (
         <Card>
           <CardHeader className="flex items-center justify-between gap-2">
             <CardTitle>Two-Factor Authentication</CardTitle>
-            <Badge variant={isTwoFactorEnabled ? "default" : "secondary"}>
+            {/* <Badge variant={isTwoFactorEnabled ? "default" : "secondary"}>
               {isTwoFactorEnabled ? "Enabled" : "Disabled"}
-            </Badge>
+            </Badge> */}
           </CardHeader>
           <CardContent>
             Two-Factor Authentication Component
             {/* <TwoFactorAuth isEnabled={isTwoFactorEnabled} /> */}
           </CardContent>
         </Card>
-      {/* )} */}
+       )} 
 
       <Card>
         <CardHeader>

@@ -6,7 +6,7 @@ import { sendPasswordResetEmail } from "@/actions/send-email.action"
 import { sendEmailVerificationEmail } from "@/actions/send-email.action"
 import { createAuthMiddleware } from "better-auth/api"
 import { sendWelcomeEmail } from "@/actions/send-email.action"
-// import { sendDeleteAccountVerificationEmail } from "../emails/delete-account-verification"
+import { sendDeleteAccountVerificationEmail } from "@/actions/send-email.action"
 // import { twoFactor } from "better-auth/plugins/two-factor"
 // import { passkey } from "better-auth/plugins/passkey"
 // import { admin as adminPlugin } from "better-auth/plugins/admin"
@@ -35,12 +35,12 @@ export const auth = betterAuth({
         })
       },
     },
-  //   deleteUser: {
-  //     enabled: true,
-  //     sendDeleteAccountVerification: async ({ user, url }) => {
-  //       await sendDeleteAccountVerificationEmail({ user, url })
-  //     },
-  //   },
+    deleteUser: {
+      enabled: true,
+      sendDeleteAccountVerification: async ({ user, url }) => {
+        await sendDeleteAccountVerificationEmail({ user, url })
+      },
+    },
     additionalFields: {
       favoriteNumber: {
         type: "number",
