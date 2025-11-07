@@ -11,11 +11,11 @@ export const user = pgTable("user", {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-  // twoFactorEnabled: boolean("two_factor_enabled").default(false),
-  // role: text("role"),
-  // banned: boolean("banned").default(false),
-  // banReason: text("ban_reason"),
-  // banExpires: timestamp("ban_expires"),
+  twoFactorEnabled: boolean("two_factor_enabled").default(false),
+  role: text("role"),
+  banned: boolean("banned").default(false),
+  banReason: text("ban_reason"),
+  banExpires: timestamp("ban_expires"),
   // stripeCustomerId: text("stripe_customer_id"),
   favoriteNumber: integer("favorite_number").notNull(),
   // favoriteNumber: integer("favorite_number").notNull().default(0),
@@ -34,7 +34,7 @@ export const session = pgTable("session", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  // impersonatedBy: text("impersonated_by"),
+  impersonatedBy: text("impersonated_by"),
   // activeOrganizationId: text("active_organization_id"),
 })
 

@@ -4,10 +4,10 @@ import {
   inferAdditionalFields,
   passkeyClient,
   twoFactorClient,
-//   adminClient,
+  adminClient,
 //   organizationClient,
 } from "better-auth/client/plugins"
-// import { ac, admin, user } from "@/components/auth/permissions"
+import { ac, admin, user } from "@/components/auth/permissions"
 // import { stripeClient } from "@better-auth/stripe/client"
 
 export const authClient = createAuthClient({
@@ -19,13 +19,14 @@ export const authClient = createAuthClient({
         window.location.href = "/auth/2fa"
       },
     }),
-    // adminClient({
-    //   ac,
-    //   roles: {
-    //     admin,
-    //     user,
-    //   },
-    // }),
+    // adminClient(),
+    adminClient({
+      ac,
+      roles: {
+        admin,
+        user,
+      },
+    }),
     // organizationClient(),
     // stripeClient({
     //   subscription: true,

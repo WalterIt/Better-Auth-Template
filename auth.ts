@@ -7,11 +7,12 @@ import { sendEmailVerificationEmail } from "@/actions/send-email.action"
 import { createAuthMiddleware } from "better-auth/api"
 import { sendWelcomeEmail } from "@/actions/send-email.action"
 import { sendDeleteAccountVerificationEmail } from "@/actions/send-email.action"
-// import { twoFactor } from "better-auth/plugins/two-factor"
-// import { passkey } from "better-auth/plugins/passkey"
-// import { admin as adminPlugin } from "better-auth/plugins/admin"
+import { twoFactor } from "better-auth/plugins/two-factor"
+import { passkey } from "better-auth/plugins/passkey"
+// import { admin  } from "better-auth/plugins/admin"
+import { admin as adminPlugin } from "better-auth/plugins/admin"
+import { ac, admin, user } from "@/components/auth/permissions"
 // import { organization } from "better-auth/plugins/organization"
-// import { ac, admin, user } from "@/components/auth/permissions"
 // import { sendOrganizationInviteEmail } from "../emails/organization-invite-email"
 // import { and, desc, eq } from "drizzle-orm"
 // import { member } from "@/drizzle/schema"
@@ -92,15 +93,16 @@ export const auth = betterAuth({
   },
   plugins: [
     nextCookies(),
-    // twoFactor(),
-    // passkey(),
-    // adminPlugin({
-    //   ac,
-    //   roles: {
-    //     admin,
-    //     user,
-    //   },
-    // }),
+    twoFactor(),
+    passkey(),
+    // admin({defaultRole: "user"}),
+    adminPlugin({
+      ac,
+      roles: {
+        admin,
+        user,
+      },
+    }),
     // organization({
     //   sendInvitationEmail: async ({
     //     email,

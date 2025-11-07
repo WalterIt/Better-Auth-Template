@@ -28,8 +28,8 @@ import { ChangePasswordForm } from "./_components/change-password-form"
 import { SessionManagement } from "./_components/session-management"
 import { AccountLinking } from "./_components/account-linking"
 import { AccountDeletion } from "./_components/account-deletion"
-// import { TwoFactorAuth } from "./_components/two-factor-auth"
-// import { PasskeyManagement } from "./_components/passkey-management"
+import { TwoFactorAuth } from "./_components/two-factor-auth"
+import { PasskeyManagement } from "./_components/passkey-management"
 
 export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -61,8 +61,7 @@ export default async function ProfilePage() {
               <h1 className="text-3xl font-bold">
                 {session.user.name || "User Profile"}
               </h1>
-              User Role
-              {/* <Badge>{session.user.role}</Badge> */}
+              <Badge>{session.user.role}</Badge>
             </div>
             <p className="text-muted-foreground">{session.user.email}</p>
           </div>
@@ -105,7 +104,7 @@ export default async function ProfilePage() {
           <LoadingSuspense>
             <SecurityTab
               email={session.user.email}
-            //   isTwoFactorEnabled={session.user.twoFactorEnabled ?? false}
+              isTwoFactorEnabled={session.user.twoFactorEnabled ?? false}
             />
           </LoadingSuspense>
         </TabsContent>
@@ -172,18 +171,17 @@ async function SessionsTab({
 
 async function SecurityTab({
   email,
-//   isTwoFactorEnabled,
+  isTwoFactorEnabled,
 }: {
   email: string
-//   isTwoFactorEnabled: boolean
+  isTwoFactorEnabled: boolean
 }) {
-    const accounts = await auth.api.listUserAccounts({ headers: await headers() })
-//   const [passkeys, accounts] = await Promise.all([
-//     // auth.api.listPasskeys({ headers: await headers() }),
-//     auth.api.listUserAccounts({ headers: await headers() }),
-//   ])
+  const [passkeys, accounts] = await Promise.all([
+    auth.api.listPasskeys({ headers: await headers() }),
+    auth.api.listUserAccounts({ headers: await headers() }),
+  ])
 
-  const hasPasswordAccount = accounts.some(a => a.providerId === "credential")
+  const hasPasswordAccount = accounts.some((a) => a.providerId === "credential")
 
   return (
     <div className="space-y-6">
@@ -199,7 +197,7 @@ async function SecurityTab({
             <ChangePasswordForm />
           </CardContent>
         </Card>
-        ) : (  
+      ) : (
         <Card>
           <CardHeader>
             <CardTitle>Set Password</CardTitle>
@@ -211,29 +209,28 @@ async function SecurityTab({
             <SetPasswordButton email={email} />
           </CardContent>
         </Card>
-        )}  
+      )}
       {hasPasswordAccount && (
         <Card>
           <CardHeader className="flex items-center justify-between gap-2">
             <CardTitle>Two-Factor Authentication</CardTitle>
-            {/* <Badge variant={isTwoFactorEnabled ? "default" : "secondary"}>
+            <Badge variant={isTwoFactorEnabled ? "default" : "secondary"}>
               {isTwoFactorEnabled ? "Enabled" : "Disabled"}
-            </Badge> */}
+            </Badge>
           </CardHeader>
           <CardContent>
-            Two-Factor Authentication Component
-            {/* <TwoFactorAuth isEnabled={isTwoFactorEnabled} /> */}
+            {/* // TODO: Implement a simpler 2FA without QRCode */}
+            <TwoFactorAuth isEnabled={isTwoFactorEnabled} />
           </CardContent>
         </Card>
-       )} 
+      )}
 
       <Card>
         <CardHeader>
           <CardTitle>Passkeys</CardTitle>
         </CardHeader>
         <CardContent>
-            PassKey Management
-          {/* <PasskeyManagement passkeys={passkeys} /> */}
+          <PasskeyManagement passkeys={passkeys} />
         </CardContent>
       </Card>
     </div>

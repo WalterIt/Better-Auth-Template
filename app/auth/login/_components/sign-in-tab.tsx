@@ -18,7 +18,7 @@ import { LoadingSwap } from "@/components/ui/loading-swap"
 import { authClient } from "@/auth-client"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
-// import { PasskeyButton } from "./passkey-button"
+import { PasskeyButton } from "./passkey-button"
 
 const signInSchema = z.object({
   email: z.email().min(1),
@@ -120,7 +120,8 @@ export function SignInTab(
           </Button>
         </form>
       </Form>
-      {/* <PasskeyButton /> */}
+      {/* // TODO: BUG - PasskeyButton is not working. It adds passkey to DB but not signing in */}
+      <PasskeyButton />
     </div>
   )
 }
