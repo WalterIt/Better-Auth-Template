@@ -1,14 +1,14 @@
-'use client'
+"use client"
 
-import { authClient } from "@/auth-client";
-import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
+import { authClient } from "@/auth-client"
+import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 
 export default function Home() {
   const [hasAdminPermission, setHasAdminPermission] = useState(false)
-  const {data: session, isPending: loading} = authClient.useSession();
+  const { data: session, isPending: loading } = authClient.useSession()
 
   useEffect(() => {
     authClient.admin
@@ -18,9 +18,12 @@ export default function Home() {
       })
   }, [])
 
-
   if (loading) {
-    return <div className="flex items-center justify-center h-screen text-3xl text-blue-700">Loading...</div>
+    return (
+      <div className="flex items-center justify-center h-screen text-3xl text-blue-700">
+        Loading...
+      </div>
+    )
   }
 
   return (
@@ -41,6 +44,9 @@ export default function Home() {
             <div className="flex gap-4 justify-center">
               <Button asChild size="lg">
                 <Link href="/profile">Profile</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/organizations">Organizations</Link>
               </Button>
               {hasAdminPermission && (
                 <Button variant="outline" asChild size="lg">
